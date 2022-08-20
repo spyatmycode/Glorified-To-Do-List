@@ -1,0 +1,99 @@
+<!-- <li>
+                <span class="content">
+                    
+                    <p class="item">
+                        Feed the Dog
+                    </p>
+                    <button>🗑</button>
+                </span>
+                
+           </li>
+
+           <li>
+            <span class="content">
+                
+                <p class="item">
+                    Feed the Dog Lorem ipsum dolor sit amet consectetur adipisicing elit. In similique aliquid adipisci iusto aliquam, perferendis corrupti ullam quo laborum ratione repellat, impedit, omnis veritatis harum ad ab saepe sed explicabo?20
+                </p>
+                <button>🗑</button>
+            </span>
+            
+            </li> -->
+
+            /*******Finally some local storage stuff */
+
+// localStorage.setItem("myNames", JSON.stringify(['Nifemi','Adeola','Akeju']))
+
+// const theNames = JSON.parse(localStorage.getItem("myNames"))
+
+// console.log(theNames);
+// localStorage.setItem('arrayName', JSON.stringify([1,2,3]))
+
+function signUpFunction(){
+   
+    const loadTime = 3000
+
+    const userName = nameInput.value
+
+    nameInput.setAttribute('disabled','')
+
+    showLoader()
+
+    function showLoader(){
+        const loader = document.querySelector('.load')
+
+        loader.style.display = "block"
+
+        setTimeout(function(){
+            loader.style.display = "none"
+        }, loadTime)
+
+
+    }
+
+    setTimeout(function(){
+        signUpPage.style.display = "none"
+    }, loadTime)
+    
+    
+    return userName
+}
+
+function addUserNameToLocalStorage(){
+    const userName = signUpFunction()
+
+    console.log(userName);
+
+    localStorage.setItem('username', JSON.stringify(userName))
+
+    
+}
+
+
+
+function windowLoadFunctions(){
+    if(localStorage.getItem('username')){
+        const username = JSON.parse(localStorage.getItem('username'))
+
+        userNameDisplay.textContent = `Hello, ${username}`
+        signUpPage.style.display = 'none'
+    }
+    
+    
+    
+}
+
+
+function whenToShowSignUp(){
+    
+}
+
+
+function signUpFunctions(e){
+    e.preventDefault()
+
+    signUpFunction()
+   addUserNameToLocalStorage()
+}
+
+
