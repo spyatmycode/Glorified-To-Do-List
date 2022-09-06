@@ -90,7 +90,7 @@ function daily(){
         <p class="item" id='${itemID}'>
            ${inputItem}
            <br/>
-           ${itemTime}
+          
 
         </p>
         <button class='done-btn action-btn'>✔</button>
@@ -324,7 +324,7 @@ function renderListItems(){
        
         <p class="item" id='${eachItem.id}'>
         
-           ${eachItem.item}
+          
            <br/>
            
         </p>
