@@ -92,10 +92,11 @@ p:hover{
 
 .daily li, .weekly li, .monthly li{
 
-    margin: 15px auto;
+    margin: 15px 20px;
     box-shadow: 0px 5px 10px 0px grey;
     padding: 0px 3px;
     border-left: 5px solid orange;
+    
     
 }
 
