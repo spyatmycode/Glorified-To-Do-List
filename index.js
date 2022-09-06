@@ -2,15 +2,18 @@
 const inputStatus = document.querySelector('.status')
 const form = document.querySelector('.input-form')
 const input = document.querySelector('.task-input')
-const listParent = document.querySelector('ul')
-const lightdarkbtn = document.querySelector('.light-dark')
+const dailyCategoryList = document.querySelector('.daily')
+const weeklyCategoryList = document.querySelector('.weekly')
+const monthlyCategoryList = document.querySelector('.monthly')
+// const lightdarkbtn = document.querySelector('.theme-btn')
 const root = document.querySelector(':root')
+const categoryButtons = document.querySelectorAll('.category-btn')
 
-const signUpPage = document.querySelector('.sign-up')
-const signUpForm = document.querySelector('.sign-up-form')
-const nameInput = document.querySelector('.name-input')
-const userNameDisplay = document.querySelector('.name').querySelector('h2')
 const clearBtn = document.querySelector('.clear-all')
+
+let monthlyStatus;
+let dailyStatus;
+let weeklyStatus;
 
 
 
@@ -19,11 +22,13 @@ const clearBtn = document.querySelector('.clear-all')
 
 form.addEventListener('submit', formFunction)
 
+
+
 window.addEventListener('load',
     displayNameDate
 )
 
-lightdarkbtn.addEventListener('click', lightdarkmode)
+// lightdarkbtn.addEventListener('click', lightdarkmode)
 
 window.addEventListener('DOMContentLoaded', windowLoadFunctions)
 
@@ -33,12 +38,13 @@ window.addEventListener('DOMContentLoaded', windowLoadFunctions)
 
 
 function formFunction(e) {
-
+    
     e.preventDefault()
-    getInputFunction()
-    clearAllFunction()    
+    daily()
+   clearAllFunction()  
+   input.value = ""
+   showClearBtn()
 
-    input.value = ""
 
 
 }
@@ -46,69 +52,71 @@ function formFunction(e) {
 function windowLoadFunctions(){
     userNameFunction()
     renderListItems()
+    
+    showClearBtn()
 }
 
+function showClearBtn(){
+    let Lists = document.querySelectorAll('li')
 
-/*function getInput(){
+    if(Lists.length>0){
+        clearBtn.style.display = 'block'
+    }
+    if(Lists.length<1){
+        clearBtn.style.display = 'none'
+    }
+   }
 
-******This was the first Function I wrote to get input from the user until I decided to write a more complex below*****  
 
-    console.log(input.value);
-    let inputValue = input.value
-   
-listParent.innerHTML += ` <li>
-<span class="content">
-    
-    <p class="item">
-        ${inputValue}
-    </p>
-    <button>🗑</button>
-</span>
 
-</li>`
-viewFullContent()
+function daily(){
 
-}
-*/
-
-function getInputFunction() {
-
-    
-
+    let itemHours = new Date().getHours()
+    let itemMinutes = new Date().getMinutes()
+    itemMinutes<10? itemMinutes = '0'+itemMinutes: itemMinutes
+    const itemTime = `${itemHours}:${itemMinutes} `
     let itemID = new Date().getMilliseconds().toString()
     let inputItem = input.value
+    console.log(itemTime);
 
     //If the Input is actually an Input
     if (inputItem !== '') {
-        let newStuff = document.createElement('li')
+        let newItem = document.createElement('li')
 
-        newStuff.innerHTML = `<span class="content">
+        
+
+        newItem.innerHTML = `<span class="content">
                         
         <p class="item" id='${itemID}'>
            ${inputItem}
+           <br/>
+           ${itemTime}
+
         </p>
         <button class='done-btn action-btn'>✔</button>
         <button class='delete-btn action-btn'>❌</button>
+        <button class='edit-btn action-btn'>${itemTime}</button>
+        
         </span>`
 
         
 
-        addToLocalStorage(itemID, inputItem)
+        addToLocalStorage(itemID, inputItem, itemTime, 'daily')
 
-        listParent.appendChild(newStuff)
 
-        
-        viewFullContent()
+        dailyCategoryList.appendChild(newItem)
 
-        let deleteItem = newStuff.querySelector('.delete-btn')
+        let deleteItem = newItem.querySelector('.delete-btn')
 
 
         deleteItem.addEventListener('click', deleteItemFromList)
 
-        let checkItem = newStuff.querySelector('.action-btn')
+        let checkItem = newItem.querySelector('.action-btn')
 
         checkItem.addEventListener('click', checkItemFromList)
 
+        let editBtn = newItem.querySelector('.edit-btn')
+   
         
 
 
@@ -117,7 +125,7 @@ function getInputFunction() {
     function deleteItemFromList(btn){
         let immediateParent = btn.currentTarget.parentElement.parentElement
 
-            listParent.removeChild(immediateParent)
+            dailyCategoryList.removeChild(immediateParent)
 
             let message = "Item removed successfully"
 
@@ -141,6 +149,7 @@ function getInputFunction() {
             immediateParent.style.textDecoration = `line-through`
 
     }
+    
     
     
 
@@ -193,34 +202,6 @@ function validateStatus() {
 
 /** View the full content of an Item when you click in case its too long */
 
-function viewFullContent() {
-    const listItems = document.querySelectorAll('p')
-
-   
-
-    listItems.forEach((li) => {
-        li.addEventListener('click', (p) => {
-
-            
-            p.target.classList.toggle('active')
-
-            /****Turns that I don't even need this mehn..I just the p:hover to show full content...No be everything be JS function */
-
-
-            // if (p.target.classList.contains('active')) {
-
-            //     p.target.classList.remove('active')
-
-            // } else {
-            //     p.target.classList.add('active')
-            // }
-
-        })
-    })
-
-}
-
-
 
 
 
@@ -270,21 +251,21 @@ function lightdarkmode() {
 
 }
 
-function getLocalStorage(){
-    return localStorage.getItem('taskList')?JSON.parse(localStorage.getItem('taskList')): []
+function getLocalStorage(category){
+    return localStorage.getItem(`TaskList`)?JSON.parse(localStorage.getItem(`TaskList`)): []
 }
 
 
 
 
-function addToLocalStorage(id, item){
-    const eachItem = {id, item}
+function addToLocalStorage(id, item, time){
+    const eachItem = {id, item, time}
 
-    let theArray = localStorage.getItem('taskList')?JSON.parse(localStorage.getItem('taskList')): []
+    let theArray = localStorage.getItem(`TaskList`)?JSON.parse(localStorage.getItem(`TaskList`)): []
 
     theArray.push(eachItem)
 
-    localStorage.setItem('taskList', JSON.stringify(theArray))
+    localStorage.setItem(`TaskList`, JSON.stringify(theArray))
 }
 
 
@@ -297,7 +278,7 @@ function removeFromLocalStorage(id){
         }
     })
 
-    localStorage.setItem('taskList', JSON.stringify(listItems))
+    localStorage.setItem(`TaskList`, JSON.stringify(listItems))
 }
 
 
@@ -309,97 +290,63 @@ function removeFromLocalStorage(id){
 
 
 
-function userNameFunction(){
-    if(!localStorage.getItem('username')){
-        
-        signUpPage.style.display = 'flex'
-        signUpForm.addEventListener('submit',addUsernameLocalStorage)
-        
-    }
-    else if(localStorage.getItem('username')){
-        const username = JSON.parse(localStorage.getItem('username'))
-        userNameDisplay.textContent = `Hello, ${username}`
-    }
-}
 
-
-
-function addUsernameLocalStorage(e){
-    e.preventDefault()
-    const username = nameInput.value
-    nameInput.setAttribute('disabled','')
-
-    localStorage.setItem('username',JSON.stringify(username))
-    userNameDisplay.textContent = `Hello, ${username}`
-    loader()
-    
-    function loader(){
-        
-        const loader = document.querySelector('.load')
-
-        loader.style.display = "block"
-
-        setTimeout(function(){
-            loader.style.display = "none"
-        }, 4000)
-    }
-
-    setTimeout(()=>{
-        signUpPage.style.display = 'none'
-    }, 4000)
-
-}
 
 
 function clearAllFunction(){
-
-    let Lists = document.querySelectorAll('li')
-
-    if(Lists.length>0){
-        clearBtn.style.display = 'block'
-    }
-    if(Lists.length<1){
-        clearBtn.style.display = 'none'
-    }
+    const Lists = document.querySelectorAll('li')
+    
 
     let taskList = getLocalStorage()
 
     clearBtn.addEventListener('click', ()=>{
-        localStorage.removeItem('taskList')
+        localStorage.removeItem('TaskList')
 
     Lists.forEach((item)=>{
         item.remove(item)
-    })
 
     })
+
+    showClearBtn()
+
+    })
+    
 }
 
-function renderListItems(){
-    let taskList = getLocalStorage()
 
-     taskList = taskList.map((eachItem)=>{
+
+function renderListItems(){
+    let taskList = getLocalStorage('TaskList')
+
+     renderedList = taskList.map((eachItem)=>{
 
         return `<li><span class="content">
-                        
+       
         <p class="item" id='${eachItem.id}'>
+        
            ${eachItem.item}
+           <br/>
+           
         </p>
         <button class='done-btn action-btn'>✔</button>
         <button class='delete-btn action-btn'>❌</button>
+        <button class='time-btn action-btn'>${eachItem.time}</button>
         </span></li>`
 
 
     })
 
-    let taskListId = taskList.map((eachItem)=>{
+    let taskListIds = taskList.map((eachItem)=>{
 
         return eachItem.id
-
+        /*I figured this was not important because my remove from local storage function takes in Single strings and this gives me an array so... this just gives a list of all ID's in the local storage as an array*/
 
     })
 
+    
 
-    listParent.innerHTML = taskList.join('')
+
+    dailyCategoryList.innerHTML = renderedList.join('')
 
     const deleteBtn = document.querySelectorAll('.delete-btn')
 
@@ -408,12 +355,16 @@ function renderListItems(){
             
             let immediateParent = btn.currentTarget.parentElement.parentElement
 
-            listParent.removeChild(immediateParent)
+            dailyCategoryList.removeChild(immediateParent)
+            // console.log(typeof immediateParent.querySelector('p').id);
 
+            currentID = immediateParent.querySelector('p').id
+            console.log(currentID);
             let message = "Item removed successfully"
 
             inputStatus.textContent = message
             inputStatus.style.visibility = 'visible'
+            inputStatus.style.color = 'red'
 
             setTimeout(() => {
                 inputStatus.textContent = message
@@ -421,19 +372,37 @@ function renderListItems(){
 
             }, 1000);
 
-        removeFromLocalStorage(taskListId)
-        clearAllFunction()
-
+        removeFromLocalStorage(currentID)
+        
         })
 
 
     })
 
+    const checkBtn = document.querySelectorAll('.done-btn')
+
+    checkBtn.forEach((button)=>{
+        button.addEventListener('click',(btn)=>{
+            let immediateParent = btn.currentTarget.parentElement.querySelector('p')
+
+            immediateParent.style.textDecoration = `line-through`
+        })
+    })
+
     
+    
+    
+
+    clearAllFunction()
+
 
 
 }
 
-/**Last seen Line 426 on August 19th 9:35pm : you are trying to fix the renderList function buttons bug */
+
+
+
+
+
 
 

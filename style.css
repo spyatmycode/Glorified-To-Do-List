@@ -70,7 +70,7 @@ p.item{
     display: flex;
     font-size: small;
     word-break: break-all;
-    border-left: 2px solid orange;
+    
     
 }
 
@@ -89,10 +89,13 @@ p:hover{
     cursor: pointer;
 }
 
-ul li{
+
+.daily li, .weekly li, .monthly li{
 
     margin: 15px auto;
     box-shadow: 0px 5px 10px 0px grey;
+    padding: 0px 3px;
+    border-left: 5px solid orange;
     
 }
 
@@ -234,7 +237,7 @@ ul li{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 40px;
 
 }
 
@@ -249,4 +252,44 @@ ul li{
     display: none;
 
 }
+
+.theme{
+    
+    /* width: 50px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    position: fixed;
+    left: 0;
+    top: 160px;
+    
+}
+
+.theme-btn{
+    width: 60px;
+    border: none;
+    color: var(--color);
+    font-weight: 600;
+    background-color: white;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 99;
+    font-size: 10px;
+    text-align:end;
+    transform: translateX(-30px);
+    transition: 0.2s ease;
+    box-shadow: var(--box-shadow);
+
+}
+
+
+
+/* .category-btn.active{
+    background-color: var(--color);
+    color: white;
+    transform: translateX(-10px);
+    
+} */
 
