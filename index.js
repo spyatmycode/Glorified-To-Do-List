@@ -324,8 +324,8 @@ function renderListItems(){
        
         <p class="item" id='${eachItem.id}'>
         
-          
-           <br/>
+           ${eachItem.item}
+           
            
         </p>
         <button class='done-btn action-btn'>✔</button>
